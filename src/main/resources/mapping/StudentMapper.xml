@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.china.myspringboot.mapper.StudentMapper" >
+
+    <!--此标签为查询结果集，并封装为对象Student返回去。结果集为json类型
+    注意他的id对应下面的resultMap属性值-->
+    <resultMap id="BaseResultMap" type="cn.china.myspringboot.entity.Student" >
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="age" property="age"  jdbcType="INTEGER" />
+        <result column="gender" property="gender" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="allColumn">
+        name,age,gender
+    </sql>
+    <!--注意这个id，就是接口或者controller层中定义的方法名-->
+    <insert id="insert" parameterType="cn.china.myspringboot.entity.Student">
+        insert into student(name,age,gender) values(#{name},#{age},#{gender})
+    </insert>
+
+    <!--resultMap="BaseResultMap" 这个属性对应上面的resultMap标签-->
+    <select id="selectByName" resultMap="BaseResultMap" >
+        select <include refid="allColumn"/> from student where name=#{name}
+    </select>
+
+    <!--如果你只想返回表中单个字段，字段类型为String  int等等，就可以用下面这个-->
+    <!--<select id="aaa" resultType="int或者String" >
+        select age from student where name=#{name}
+    </select>-->
+
+    <!--一定要注意name=#{name1} and age=#{age1}中对应的是mapper层中对应的方法中加的注解-->
+    <select id="selectByNameAndAge" resultMap="BaseResultMap">
+        select <include refid="allColumn"/> from student where name=#{name1} and age=#{age1}
+    </select>
+
+    <!--传入参数为map集合:#{}这里面的就是类的成员变量名-->
+    <select id="selectByNameAndGender" parameterType="map" resultMap="BaseResultMap">
+        select <include refid="allColumn"/> from student where name=#{nameKey} and gender=#{genderKey}
+    </select>
+
+    <!--插入的参数类型为list-->
+    <insert id="insertList" parameterType="list">
+        insert into student(name,age,gender) values
+        <foreach collection="list" item="stu" separator=",">
+            (#{stu.name}),(#{stu.age}),(#{stu.gender})
+        </foreach>
+    </insert>
+
+    <!--注意，当传的参数为String  Integer 等等 或者他们的组合时，即只要不是对象或者集合
+    都不需要写parameterType这个属性-->
+    <update id="update">
+        update teacher set gender=#{gender1} where id=#{id1}
+    </update>
+</mapper>

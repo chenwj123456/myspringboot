@@ -1,0 +1,19 @@
+#在这里面配置同等properties里面的，只不过格式不一样   3306/mysql?    mysql为数据库名字
+server:
+  port: 8080
+
+#配置数据库,hikari为数据库连接池配置
+spring :
+  application:
+    name: provider
+  datasource:
+    username: root
+    password: 123
+    url: jdbc:mysql://localhost:3306/ssm?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      connection-timeout: 6000
+      maximum-pool-size: 5
+
+mybatis:
+  mapper-locations: classpath:mapping/*Mapper.xml
